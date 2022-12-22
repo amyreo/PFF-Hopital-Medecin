@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring-2.23.3.xsd">
+	<bean class="org.mycompany.Processor.ProcessorScanPatient" id="ProcessorScanPatient" />
+	<bean class="org.mycompany.Processor.ProcessorScanPatientNouveauMessage" id="choixnouveauxmessage" />
+	<bean class="org.mycompany.Processor.ProcessorScanmedecinReponse" id="reponsemedecin" />
+	<camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+		<route id="_route1">
+			<from id="entryPoint" uri="jms:queue:JT_ReponseMedecin" />
+			<log id="_log2" message="Nouveau message pour le médecin : ${body}" />
+			<process id="ProcessorScanPatientNouveauxMesage" ref="reponsemedecin" />
+			<to id="_to5" uri="jms:queue:JT_Patient" />
+			<log id="_log3" message="Message envoyé chez le patient avec succès ! Le message était : ${body}" />
+		</route>
+	</camelContext>
+</beans>
